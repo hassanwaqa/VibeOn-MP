@@ -1,21 +1,29 @@
 import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 import { Searchbar, Sidebar, MusicPlayer, TopPlay } from './components';
 import { ArtistDetails, TopArtists, AroundYou, Discover, Search, SongDetails, TopCharts } from './pages';
+import Login from "./pages/Login"
+import Register from './pages/Register';
  
 const App = () => {
   const { activeSong } = useSelector((state) => state.player);
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
+  const isRegisterPage = location.pathname === '/register';
+  const shouldRenderSidebar = !(isLoginPage || isRegisterPage);
 
   return (
     <div className="relative flex">
-      <Sidebar />
+      {shouldRenderSidebar && <Sidebar />}
       <div className="flex-1 flex flex-col bg-gradient-to-br from-white to-[#fff]">
-        <Searchbar />
+        {shouldRenderSidebar && <Searchbar />}
 
         <div className="px-6 h-[calc(100vh-72px)] overflow-y-scroll hide-scrollbar flex xl:flex-row flex-col-reverse">
           <div className="flex-1 h-fit pb-40">
             <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
               <Route path="/" element={<Discover />} />
               <Route path="/top-artists" element={<TopArtists />} />
               <Route path="/top-charts" element={<TopCharts />} />
@@ -26,7 +34,7 @@ const App = () => {
             </Routes>
           </div>
           <div className="xl:sticky relative top-0 h-fit">
-            <TopPlay />
+            {shouldRenderSidebar && <TopPlay />}
           </div>
         </div>
       </div>
