@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFormik } from "formik";
 import { Button, Container, Row, Col, Label, Input } from 'reactstrap';
 import googleLogo from '../assets/google.png';
@@ -10,6 +10,10 @@ import  ErrorMessage  from "../components/ErrorMessage"
 import { Network, Urls } from "../apiConfiguration";
 // import { useLoader } from "../hooks"
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { setAuthenticatinStatus } from '../redux/features/playerSlice';
+
+
 
 const initialValues = {
 	email: '',
@@ -23,9 +27,19 @@ const validationSchema = Yup.object().shape({
 	password: Yup.string().required("Password is required"),
 });
 
+
+
 const Login = () => {
 	// const { setLoading } = useLoader();
 	const navigate = useNavigate();
+	const { userAuthenticate } = useSelector((state) => state.player);
+
+  	const dispatch = useDispatch();
+	  useEffect(() => {
+		console.log("userAuthenticate in login form store after dispatch in useEffect-------------> ", userAuthenticate);
+	  }, [userAuthenticate]);
+
+	
 
 	const handleLogin = async (values) => {
     console.log(values)
@@ -38,12 +52,13 @@ const Login = () => {
 
 
 		if (!response.ok) {
-			// Set data in local storage
-			localStorage.setItem('isAuthenticate', 'false'); 
+			// localStorage.setItem('isAuthenticate', 'false'); 
 			return showErrorMessage(response.data.error); 
 		} else {
-			// Set data in local storage
-			localStorage.setItem('isAuthenticate', 'true');
+			// localStorage.setItem('isAuthenticate', 'true');
+			console.log("userAuthenticate in login form store-------------> ", userAuthenticate);
+			if (!userAuthenticate) dispatch(setAuthenticatinStatus(true));
+			console.log("userAuthenticate in login form store after dispatch-------------> ", userAuthenticate);
 			console.log("About to navigate")
 			navigate("/")
 			console.log("After Navigate")

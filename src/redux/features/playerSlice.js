@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+  userAuthenticate: false,
   currentSongs: [],
   currentIndex: 0,
   isActive: false,
@@ -57,9 +58,15 @@ const playerSlice = createSlice({
     selectGenreListId: (state, action) => {
       state.genreListId = action.payload;
     },
+
+    setAuthenticatinStatus: (state, action) => {
+      console.log("In the store function action.payload--->", action.payload);
+      state.userAuthenticate = action.payload;
+
+    },
   },
 });
 
-export const { setActiveSong, nextSong, prevSong, playPause, selectGenreListId } = playerSlice.actions;
+export const { setActiveSong, nextSong, prevSong, playPause, selectGenreListId, setAuthenticatinStatus } = playerSlice.actions;
 
 export default playerSlice.reducer;

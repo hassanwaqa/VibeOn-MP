@@ -28,9 +28,9 @@ const more = [
   { name: 'Logout', to: '/logout', icon: HiLogout },
 ];
 
-const logout = () => {
-  localStorage.setItem('isAuthenticate', 'false'); 
-}
+// const logout = () => {
+//   localStorage.setItem('isAuthenticate', 'false'); 
+// }
 
 const NavLinks = ({ handleClick }) => (
   <div className="mt-10 ml-10 ">
@@ -46,7 +46,6 @@ const NavLinks = ({ handleClick }) => (
         {item.name}
       </NavLink>
     ))}
-    <button onClick={logout} >Logout</button>
     <h6>Library</h6>
     {library.map((item) => (
       <NavLink
