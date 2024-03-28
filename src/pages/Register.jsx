@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import { showErrorMessage, showSuccessMessage } from "../components/toast";
 import  ErrorMessage  from "../components/ErrorMessage"
 import { Network, Urls } from "../apiConfiguration";
+
 // import { useLoader } from "../hooks";
 import { useNavigate } from "react-router-dom";
 
@@ -32,6 +33,7 @@ const Register = () => {
 		// setLoading(true)
 		const response = await Network.post(Urls.userRegister, values);
 		// setLoading(false)
+		console.log("Response ------> ",response);
 		console.log("Done")
 
 		if (!response.ok) return showErrorMessage(response.data.error);
