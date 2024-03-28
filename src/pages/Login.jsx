@@ -32,11 +32,21 @@ const Login = () => {
 		// setLoading(true)
 		const response = await Network.post(Urls.userLogin, values);
 		// setLoading(false)
+		console.log("Login response ---> ", response);
 		console.log("Done")
 
-		if (!response.ok) return showErrorMessage(response.data.error);
-		else {
+
+
+		if (!response.ok) {
+			// Set data in local storage
+			localStorage.setItem('isAuthenticate', 'false'); 
+			return showErrorMessage(response.data.error); 
+		} else {
+			// Set data in local storage
+			localStorage.setItem('isAuthenticate', 'true');
+			console.log("About to navigate")
 			navigate("/")
+			console.log("After Navigate")
 			return showSuccessMessage(response.data.message)
 		}
   };
