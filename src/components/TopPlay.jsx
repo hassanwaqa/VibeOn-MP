@@ -88,13 +88,10 @@ const TopPlay = () => {
 
       <div className="w-full flex flex-col mt-8">
         <div className="flex flex-row justify-between items-center">
-          <h2 className="text-black font-bold text-2xl">Top Artists</h2>
-          <Link to="/top-artists">
-            <p className="text-black-300 text-base cursor-pointer">See more</p>
-          </Link>
+          <h2 className="text-black font-bold text-2xl">Recently Played</h2>
         </div>
 
-        <Swiper
+        {/* <Swiper
           slidesPerView="auto"
           spaceBetween={15}
           freeMode
@@ -114,7 +111,21 @@ const TopPlay = () => {
               </Link>
             </SwiperSlide>
           ))}
-        </Swiper>
+        </Swiper> */}
+
+        <div className="mt-4 flex flex-col gap-1">
+          {topPlays?.map((song, i) => (
+            <TopChartCard
+              key={song.key}
+              song={song}
+              i={i}
+              isPlaying={isPlaying}
+              activeSong={activeSong}
+              handlePauseClick={handlePauseClick}
+              handlePlayClick={() => handlePlayClick(song, i)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
