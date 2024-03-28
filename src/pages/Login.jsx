@@ -46,6 +46,7 @@ const Login = () => {
 		// setLoading(true)
 		const response = await Network.post(Urls.userLogin, values);
 		// setLoading(false)
+
 		console.log("Login response ---> ", response);
 		console.log("Done")
 
@@ -56,6 +57,12 @@ const Login = () => {
 			return showErrorMessage(response.data.error); 
 		} else {
 			// localStorage.setItem('isAuthenticate', 'true');
+		console.log("Login response.data.user ---> ", response.data.user);
+
+			localStorage.setItem('user', response.data.user.email);
+
+			console.log("User data from local storage", localStorage.getItem('user'));
+
 			console.log("userAuthenticate in login form store-------------> ", userAuthenticate);
 			if (!userAuthenticate) dispatch(setAuthenticatinStatus(true));
 			console.log("userAuthenticate in login form store after dispatch-------------> ", userAuthenticate);

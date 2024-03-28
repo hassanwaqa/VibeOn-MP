@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 
 import PlayPause from './PlayPause';
 import { playPause, setActiveSong } from '../redux/features/playerSlice';
+import { Network, Urls } from "../apiConfiguration";
+
 
 const SongCard = ({ song, isPlaying, activeSong, data, i }) => {
   const dispatch = useDispatch();
@@ -12,7 +14,34 @@ const SongCard = ({ song, isPlaying, activeSong, data, i }) => {
     dispatch(playPause(false));
   };
 
+  const putRecentlyPlayed = async (values) => {
+    console.log(values)
+		// setLoading(true)
+		const response = await Network.put(Urls.addRecentlyPlayed, values);
+		// setLoading(false)
+		console.log("Response ------> ",response);
+		console.log("Done")
+
+		if (!response.ok) return showErrorMessage(response.data.error);
+		else {
+			navigate("/")
+			return showSuccessMessage(response.data.message)
+		}
+  };
+
   const handlePlayClick = () => {
+    const data = 
+    { 
+      email: localStorage.getItem('user'),
+      song: song.title,
+      artist: song.subtitle,
+      url: song.url,
+      image: song.images.coverart,
+    } 
+
+  putRecentlyPlayed(data)
+  .then(data => console.log(data)).catch(error => console.error('Error:', error));
+
     dispatch(setActiveSong({ song, data, i }));
     dispatch(playPause(true));
   };
