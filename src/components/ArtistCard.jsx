@@ -10,7 +10,7 @@ const ArtistCard = ({ track }) => {
       onClick={() => navigate(`/artists/${track?.artists[0].adamid}`)}
     >
       <img alt="song_img" src={track?.images?.coverart} className="w-full h-56 rounded-lg" />
-      <p className="mt-4 font-semibold text-lg text-white truncate">
+      <p className="mt-4 font-semibold text-lg text-black truncate">
         {track?.subtitle}
       </p>
     </div>

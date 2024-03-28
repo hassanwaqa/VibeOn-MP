@@ -15,7 +15,7 @@ const App = () => {
   
   const { userAuthenticate } = useSelector((state) => state.player);
   
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   useEffect(() => {
 
