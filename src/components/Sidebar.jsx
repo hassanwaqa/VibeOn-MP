@@ -18,7 +18,7 @@ const discover = [
 ];
 
 const library = [
-  { name: 'Favourite', to: '/favourite', icon: HiOutlineHeart },
+  { name: 'Favourite', to: '/favourites', icon: HiOutlineHeart },
   { name: 'Playlits', to: '/playlists', icon: HiAdjustments },
 ];
 

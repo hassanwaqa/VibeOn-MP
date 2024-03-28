@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import Layout from './pages/Layout';
 import { useDispatch } from 'react-redux';
 import { setAuthenticatinStatus } from './redux/features/playerSlice';
+import Favourites from './pages/Favourites';
  
 const App = () => {
   
@@ -15,7 +16,7 @@ const App = () => {
   
   const { userAuthenticate } = useSelector((state) => state.player);
   
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
 
@@ -37,6 +38,7 @@ const App = () => {
               
               {/* protected routes */}
               <Route path="/" element={ isAuthenticated? <Layout component={Discover} /> : <Navigate to={'/login'} replace /> } />
+              <Route path="/favourites" element={ isAuthenticated? <Layout component={Favourites} /> : <Navigate to={'/login'} replace /> } />
               <Route path="/top-artists" element={isAuthenticated? <Layout component={TopArtists} /> : <Navigate to={'/login'} replace />} />
               <Route path="/top-charts" element={isAuthenticated? <Layout component={TopCharts} /> : <Navigate to={'/login'} replace />} />
               <Route path="/around-you" element={isAuthenticated? <Layout component={AroundYou} /> : <Navigate to={'/login'} replace />} />
