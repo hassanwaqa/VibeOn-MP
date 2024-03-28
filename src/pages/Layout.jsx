@@ -24,8 +24,10 @@ function Layout({ component: Component }) {
           <div className="flex-1 h-fit pb-40">
             <Component />
           </div>
-          <div className="xl:sticky relative top-0 h-fit">
-            {shouldRenderSidebar && <TopPlay />}
+          <div className='xl:sticky top-0 h-full overflow-y-auto'>
+            <div className="h-96">
+              {shouldRenderSidebar && <TopPlay />}
+            </div>
           </div>
         </div>
       </div>
