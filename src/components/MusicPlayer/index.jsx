@@ -7,6 +7,8 @@ import Player from './Player';
 import Seekbar from './Seekbar';
 import Track from './Track';
 import VolumeBar from './VolumeBar';
+import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { Network, Urls } from "../../apiConfiguration";
 
 const MusicPlayer = () => {
   const { activeSong, currentSongs, currentIndex, isActive, isPlaying } = useSelector((state) => state.player);
@@ -18,9 +20,59 @@ const MusicPlayer = () => {
   const [shuffle, setShuffle] = useState(false);
   const dispatch = useDispatch();
 
+  const [clicked, setClicked] = useState(false);
+
+  const handleClick = async() => {
+    const user = localStorage.getItem("user")
+    console.log(user)
+    const data = {activeSong, user}
+    if (clicked == false) {
+      const response = await Network.post(Urls.addLikedSong, data);
+      if (!response.ok) { 
+        console.log(response.data.message)
+      }else{
+        setClicked(true); 
+      }
+    } else {
+      const response = await Network.post(Urls.removeLikedSong, data);
+      if (!response.ok) { 
+        console.log(response.data.message)
+      }else{
+        setClicked(false); 
+      }
+    }
+  }
+
+  const isLikedSong = async () => {
+    try {
+      console.log("Hello")
+      const user = localStorage.getItem("user")
+      const data = {activeSong, user}
+      const response = await Network.post(Urls.getLikedSong, data);
+      const likedSongs = response.data.liked_songs;
+      
+      // Check if there exists a liked song with a key equal to activeSong's key
+      const isSongLiked = likedSongs.some(song => song.key === activeSong.key);
+  
+      // If a liked song with activeSong's key exists, setClicked(true)
+      if (isSongLiked) {
+        setClicked(true);
+      }
+    } catch (error) {
+      console.error('Error fetching liked songs:', error);
+      // Handle the error as needed
+    }
+  };
+  
+
   useEffect(() => {
     if (currentSongs.length) dispatch(playPause(true));
   }, [currentIndex]);
+
+  useEffect(() => {
+    setClicked(false)
+    isLikedSong();
+  }, [activeSong]);
 
   const handlePlayPause = () => {
     if (!isActive) return;
@@ -88,6 +140,21 @@ const MusicPlayer = () => {
           onLoadedData={(event) => setDuration(event.target.duration)}
         />
       </div>
+      <button 
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            backgroundColor: 'transparent', 
+            border: 'none' 
+          }} 
+          onClick={handleClick}
+        >
+          {clicked ? (
+            <FaHeart style={{ fontSize: '1.5em', color: '#90e0ef' }} />
+          ) : (
+            <FaRegHeart style={{ fontSize: '1.5em', color: 'white' }} />
+          )}
+      </button>
       <VolumeBar value={volume} min="0" max="1" onChange={(event) => setVolume(event.target.value)} setVolume={setVolume} />
     </div>
   );
