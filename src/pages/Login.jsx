@@ -50,8 +50,6 @@ const Login = () => {
 		console.log("Login response ---> ", response);
 		console.log("Done")
 
-
-
 		if (!response.ok) {
 			// localStorage.setItem('isAuthenticate', 'false'); 
 			return showErrorMessage(response.data.error); 
