@@ -19,7 +19,7 @@ const discover = [
 
 const library = [
   { name: 'Favourite', to: '/favourites', icon: HiOutlineHeart },
-  { name: 'Playlits', to: '/playlists', icon: HiAdjustments },
+  { name: 'Playlists', to: '/playlists', icon: HiAdjustments },
 ];
 
 const more = [
