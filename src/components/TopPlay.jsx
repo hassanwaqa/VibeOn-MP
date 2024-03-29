@@ -1,9 +1,11 @@
 /* eslint-disable import/no-unresolved */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode } from 'swiper';
+import { Network, Urls } from "../apiConfiguration";
+
 
 import PlayPause from './PlayPause';
 import { playPause, setActiveSong } from '../redux/features/playerSlice';
@@ -23,11 +25,11 @@ const TopChartCard = ({ song, i, isPlaying, activeSong, handlePauseClick, handle
             {song?.title}
           </p>
         </Link>
-        <Link to={`/artists/${song?.artists[0].adamid}`}>
+        {/* <Link to={`/artists/${song?.artists[0].adamid}`}>
           <p className="text-base text-gray-300 mt-1">
             {song?.subtitle}
           </p>
-        </Link>
+        </Link> */}
       </div>
     </div>
     <PlayPause
@@ -45,10 +47,15 @@ const TopPlay = () => {
   const { activeSong, isPlaying } = useSelector((state) => state.player);
   const { data } = useGetTopChartsQuery();
   const divRef = useRef(null);
+  const [recentlyPlayed, setRecentlyPlayed] = useState(null);
 
   useEffect(() => {
     divRef.current.scrollIntoView({ behavior: 'smooth' });
   });
+
+  useEffect(() => {
+    getRecentlyPlayed();
+  }, [activeSong]);
 
   const topPlays = data?.slice(0, 5);
 
@@ -60,6 +67,24 @@ const TopPlay = () => {
     dispatch(setActiveSong({ song, data, i }));
     dispatch(playPause(true));
   };
+
+  const getRecentlyPlayed = async () => {
+    console.log("get recently played")
+    const req = {
+      "email": localStorage.getItem('user')
+    }
+
+		const response = await Network.post(Urls.getRecentlyPlayed, req);
+
+    console.log("rp response", response.data.recently_played);
+    setRecentlyPlayed(response.data.recently_played);
+		console.log("Response ------> ",response);
+		console.log("Done")
+
+		if (!response.ok) return showErrorMessage(response.data.error);
+  };
+
+
 
   return (
     <div ref={divRef} className="xl:ml-6 ml-0 xl:mb-0 mb-6 flex-1 xl:max-w-[500px] max-w-full flex flex-col">
@@ -113,8 +138,9 @@ const TopPlay = () => {
           ))}
         </Swiper> */}
 
+
         <div className="mt-4 flex flex-col gap-1">
-          {topPlays?.map((song, i) => (
+          {Array.isArray(recentlyPlayed) ? [...recentlyPlayed].reverse().map((song, i) => (
             <TopChartCard
               key={song.key}
               song={song}
@@ -124,7 +150,7 @@ const TopPlay = () => {
               handlePauseClick={handlePauseClick}
               handlePlayClick={() => handlePlayClick(song, i)}
             />
-          ))}
+          )) : null}
         </div>
       </div>
     </div>

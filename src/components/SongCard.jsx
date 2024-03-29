@@ -24,23 +24,18 @@ const SongCard = ({ song, isPlaying, activeSong, data, i }) => {
 
 		if (!response.ok) return showErrorMessage(response.data.error);
 		else {
-			navigate("/")
 			return showSuccessMessage(response.data.message)
 		}
   };
 
   const handlePlayClick = () => {
-    const data = 
-    { 
-      email: localStorage.getItem('user'),
-      song: song.title,
-      artist: song.subtitle,
-      url: song.url,
-      image: song.images.coverart,
-    } 
 
-  putRecentlyPlayed(data)
-  .then(data => console.log(data)).catch(error => console.error('Error:', error));
+    const req = {
+      email: localStorage.getItem('user'),
+      song: song
+    }
+  putRecentlyPlayed(req)
+  .then(req => console.log(req)).catch(error => console.error('Error:', error));
 
     dispatch(setActiveSong({ song, data, i }));
     dispatch(playPause(true));
