@@ -9,6 +9,7 @@ import Track from './Track';
 import VolumeBar from './VolumeBar';
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { Network, Urls } from "../../apiConfiguration";
+import { BsPlusCircleFill, BsPlusCircle } from 'react-icons/bs';
 
 const MusicPlayer = () => {
   const { activeSong, currentSongs, currentIndex, isActive, isPlaying } = useSelector((state) => state.player);
@@ -43,6 +44,43 @@ const MusicPlayer = () => {
     }
   }
 
+  const [playlistClicked, setPlaylistClicked] = useState(false);
+  const [playlists, setPlaylists] = useState([])
+  const [selectedPlaylist, setSelectedPlaylist] = useState(null)
+
+  const handlePlaylistClick = async() => {
+    if(playlistClicked == false){
+      setPlaylistClicked(true)
+    }else{
+      setPlaylistClicked(false)
+    }
+    
+  };
+
+  const addSongToPlaylist = async () => {
+    const user = localStorage.getItem("user")
+    const data = {activeSong, user, playlistName : selectedPlaylist}
+    const response = await Network.post(Urls.addSongToPlaylist, data);
+
+    if(!response.ok){
+      console.log(response?.data?.message)
+    }else {
+      console.log("Song Successfully Added to Playlist")
+    }
+    
+    
+  }
+
+  const loadPlaylists = async() => {
+    const user = localStorage.getItem("user")
+    const data = {activeSong, user}
+    const response = await Network.post(Urls.getPlaylists, data);
+
+    const playlists = response.data.playlists;
+    const playlistNames = playlists.map(playlist => playlist.name);
+    setPlaylists(playlistNames)
+  }
+
   const isLikedSong = async () => {
     try {
       console.log("Hello")
@@ -63,6 +101,8 @@ const MusicPlayer = () => {
       // Handle the error as needed
     }
   };
+
+
   
 
   useEffect(() => {
@@ -71,8 +111,19 @@ const MusicPlayer = () => {
 
   useEffect(() => {
     setClicked(false)
+    setPlaylistClicked(false)
     isLikedSong();
+    loadPlaylists();
   }, [activeSong]);
+
+  useEffect(() => {
+    addSongToPlaylist();
+    if(selectedPlaylist == true){
+      setPlaylistClicked(true)
+    }else{
+      setPlaylistClicked(false)
+    }
+  }, [selectedPlaylist])
 
   const handlePlayPause = () => {
     if (!isActive) return;
@@ -107,6 +158,51 @@ const MusicPlayer = () => {
   return (
     <div className="relative sm:px-12 px-8 w-full flex items-center justify-between">
       <Track isPlaying={isPlaying} isActive={isActive} activeSong={activeSong} />
+      <div>
+        <button 
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            backgroundColor: 'transparent', 
+            border: 'none' 
+          }} 
+          onClick={handlePlaylistClick}
+        >
+          {playlistClicked ? (
+            <BsPlusCircleFill style={{ fontSize: '1.5em', color: '#90e0ef' }} />
+          ) : (
+            <BsPlusCircle style={{ fontSize: '1.5em', color: 'white' }} />
+          )}
+        </button>
+        {/* {playlistClicked && (
+        <div>
+          <ul>
+            {playlists.map((playlistName) => (
+              <li key={playlistName} onClick={() => setSelectedPlaylist(playlistName)}>
+                {playlistName}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )} */}
+
+      {playlistClicked && (
+        <select
+          value={selectedPlaylist}
+          onChange={(e) => setSelectedPlaylist(e.target.value)}
+          className="bg-black text-gray-300 p-2 text-sm rounded-md outline-none sm:mt-0 mt-5"
+        >
+          <option disabled value="Select Playlist">Select Playlist</option>
+          {playlists.map((playlistName) => (
+            <option key={playlistName} value={playlistName}>
+              {playlistName}
+            </option>
+          ))}
+        </select>
+
+      )}
+
+      </div>
       <div className="flex-1 flex flex-col items-center justify-center">
         <Controls
           isPlaying={isPlaying}

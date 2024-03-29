@@ -2,11 +2,6 @@ import React, { useState } from 'react';
 import { BsPlusCircleFill, BsPlusCircle } from 'react-icons/bs';
 
 const Track = ({ isPlaying, isActive, activeSong }) => {
-  const [clicked, setClicked] = useState(false);
-
-  const handleClick = () => {
-    setClicked(!clicked);
-  };
 
   return (
     <div className="flex-1 flex items-center justify-start">
@@ -20,23 +15,6 @@ const Track = ({ isPlaying, isActive, activeSong }) => {
         <p className="truncate text-gray-300">
           {activeSong?.subtitle ? activeSong?.subtitle : 'No active Song'}
         </p>
-      </div>
-      <div>
-        <button 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            backgroundColor: 'transparent', 
-            border: 'none' 
-          }} 
-          onClick={handleClick}
-        >
-          {clicked ? (
-            <BsPlusCircleFill style={{ fontSize: '1.5em', color: '#90e0ef' }} />
-          ) : (
-            <BsPlusCircle style={{ fontSize: '1.5em', color: 'white' }} />
-          )}
-        </button>
       </div>
     </div>
   );
